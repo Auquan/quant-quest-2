@@ -1,13 +1,11 @@
-# Official Page for  [Quant Quest Competition](http://quant-quest.auquan.com) hosted by Auquan.#
+# Official Page for  [Quant Quest Competition](http://quant-quest.auquan.com) hosted by Auquan.
 
 ## Trading Problem Overview ##
 This problem requires a mix of statistics and data analysis skills to create a predictive model using financial data. We will provide you with a toolbox and historical data to develop and test your strategy for the competition.
 
- 1. [Installation] (https://github.com/Auquan/quant-quest-toolbox#anchors-in-markdown)
- 2. [Problem 1 ] (https://github.com/Auquan/quant-quest-2#1-problem-1)
+[TOC]
 
-#1. **Quick Startup Guide** 
-[create an anchor](#anchors-in-markdown)
+## Quick Startup Guide ##
 ### Install Python and dependent packages ### 
 You need Python 2.7 (Python 3 will be supported later) to run this toolbox. For an easy installation process, we recommend Anaconda since it will reliably install all the necessary dependencies. Download [Anaconda](http://continuum.io/downloads) and follow the instructions on the [installation page](http://docs.continuum.io/anaconda/install).   Once you have Python, you can then install the toolbox.
 
@@ -26,7 +24,7 @@ Run the following command to make sure everything is setup properly
 ### Make your changes
 Use *problem1.py* as a template which contains skeleton functions (with explanation) that need to be filled in to create your own trading strategy. You need to fill in the getFairValue function for problem 1. 
 
-#2. **How does the toolbox work?** #
+## How does the toolbox work? ##
 
 The data for the competition is provided here. The toolbox autodownloads and loads the data for you. You then need to create features and combine them in the prediction function to generate your predictions. 
 
@@ -53,7 +51,7 @@ To use your own custom features(you need to create them separately using this [t
 ### Prediction Function ###
 Combine all the features to create the desired prediction function. For problem 1, your prediction function should output the predicted FairValue(expected average of future values) over the next 5 minutes. Output of the prediction function is used by the toolbox to make further trading decisions.
 
-#3. **Available Feature Guide**
+## **Available Feature Guide** ##
 
 Features can be called by specifying config dictionaries. Create one dictionary per feature and return them in a dictionary as market features or instrument features.
 
