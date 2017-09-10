@@ -1,36 +1,40 @@
-Official Page for  [Quant Quest Competition](http://quant-quest.auquan.com) hosted by Auquan.
+# Official Page for  [Quant Quest Competition](http://quant-quest.auquan.com) hosted by Auquan.#
 
-#Trading Problem Overview
+## Trading Problem Overview ##
 This problem requires a mix of statistics and data analysis skills to create a predictive model using financial data. We will provide you with a toolbox and historical data to develop and test your strategy for the competition.
 
- 1. [Installation] (https://github.com/Auquan/quant-quest-toolbox#1-installation)
+ 1. [Installation] (https://github.com/Auquan/quant-quest-toolbox#anchors-in-markdown)
  2. [Problem 1 ] (https://github.com/Auquan/quant-quest-2#1-problem-1)
 
 #1. **Quick Startup Guide** 
-
-1. Install Python and dependent packages  
+[create an anchor](#anchors-in-markdown)
+### Install Python and dependent packages ### 
 You need Python 2.7 (Python 3 will be supported later) to run this toolbox. For an easy installation process, we recommend Anaconda since it will reliably install all the necessary dependencies. Download [Anaconda](http://continuum.io/downloads) and follow the instructions on the [installation page](http://docs.continuum.io/anaconda/install).   Once you have Python, you can then install the toolbox.
 
-2. Quant Quest Toolbox
+### Get the Quant Quest Toolbox ###
 There are multiple ways to install the toolbox for the competition.
 
 The easiest way and the most recommended way is via pip. Just run the following command:
 `pip install -U auquan_toolbox`
-After that follow the templates provided in [Problem1.py] (https://github.com/Auquan/quant-quest-2/blob/master/problem1.py). If we publish any updates to the toolbox, the same command `pip install -U auquan_toolbox` will also automatically get the new version of the toolbox. 
+If we publish any updates to the toolbox, the same command `pip install -U auquan_toolbox` will also automatically get the new version of the toolbox. 
 
-3. Download problem1.py and run the following command to make sure everything is setup properly
+### Download [Problem1.py] (https://github.com/Auquan/quant-quest-2/blob/master/problem1.py) 
+Run the following command to make sure everything is setup properly
 
         python problem1.py
 
-4. Use *problem1.py* as a template which contains skeleton functions (with explanation) that need to be filled in to create your own trading strategy. You need to fill in the getFairValue function for problem 1. 
+### Make your changes
+Use *problem1.py* as a template which contains skeleton functions (with explanation) that need to be filled in to create your own trading strategy. You need to fill in the getFairValue function for problem 1. 
 
 #2. **How does the toolbox work?** #
 
-You need to create features and combine them to get FairValue.
+The data for the competition is provided here. The toolbox autodownloads and loads the data for you. You then need to create features and combine them in the prediction function to generate your predictions. 
 
-## InstrumentFeatures, Market Features and Custom Features ##
+Features and predictions are explained below. The toolbox also provides extensive functionality and customization. While not required for the competition,you can read more about the toolbox [here](https://bitbucket.org/auquan/auquantoolbox/wiki/Home)
+
+### Creating Features ##
 Features can be called by specifying config dictionaries. Create one dictionary per feature and return them in a dictionary as market features or instrument features.
-Instrument features are calculated per instrument (for example position, fees) and market features are calculated for whole trading system (for example portfolio value)
+Instrument features are calculated per instrument (for example position, fees, moving average of instrument price) and market features are calculated for whole trading system (for example portfolio value, total pnl)
 
 Feature config Dictionary has the following keys:
   > *featureId:* a string representing the type of feature you want to use  
@@ -46,6 +50,8 @@ To use your own custom features(you need to create them separately using this [t
   > Eg. if your custom class is MyCustomFeature, and you want to access this via featureId='my_custom_feature',  
   > you will import that class, and return this function as {'my_custom_feature': MyCustomFeature}  
 
+### Prediction Function ###
+Combine all the features to create the desired prediction function. For problem 1, your prediction function should output the predicted FairValue(expected average of future values) over the next 5 minutes. Output of the prediction function is used by the toolbox to make further trading decisions.
 
 #3. **Available Feature Guide**
 
