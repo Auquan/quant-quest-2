@@ -3,7 +3,9 @@
 ## Trading Problem Overview ##
 This problem requires a mix of statistics and data analysis skills to create a predictive model using financial data. We will provide you with a toolbox and historical data to develop and test your strategy for the competition.
 
-[TOC]
+1. [Getting Started](https://github.com/Auquan/quant-quest-2#quick-startup-guide)
+2. [How does the toolbox work?](https://github.com/Auquan/quant-quest-2#how-does-the-toolbox-work)
+3. [Available Feature Guide](https://github.com/Auquan/quant-quest-2#available-feature-guide)
 
 ## Quick Startup Guide ##
 ### Install Python and dependent packages ### 
@@ -16,7 +18,7 @@ The easiest way and the most recommended way is via pip. Just run the following 
 `pip install -U auquan_toolbox`
 If we publish any updates to the toolbox, the same command `pip install -U auquan_toolbox` will also automatically get the new version of the toolbox. 
 
-### Download [Problem1.py] (https://github.com/Auquan/quant-quest-2/blob/master/problem1.py) 
+### Download [Problem1.py](https://github.com/Auquan/quant-quest-2/blob/master/problem1.py) 
 Run the following command to make sure everything is setup properly
 
         python problem1.py
@@ -26,7 +28,7 @@ Use *problem1.py* as a template which contains skeleton functions (with explanat
 
 ## How does the toolbox work? ##
 
-The data for the competition is provided here. The toolbox autodownloads and loads the data for you. You then need to create features and combine them in the prediction function to generate your predictions. 
+The data for the competition is provided [here](https://github.com/Auquan/auquan-historical-data/tree/master/qq2Data). The toolbox autodownloads and loads the data for you. You then need to create features and combine them in the prediction function to generate your predictions. 
 
 Features and predictions are explained below. The toolbox also provides extensive functionality and customization. While not required for the competition,you can read more about the toolbox [here](https://bitbucket.org/auquan/auquantoolbox/wiki/Home)
 
@@ -51,7 +53,7 @@ To use your own custom features(you need to create them separately using this [t
 ### Prediction Function ###
 Combine all the features to create the desired prediction function. For problem 1, your prediction function should output the predicted FairValue(expected average of future values) over the next 5 minutes. Output of the prediction function is used by the toolbox to make further trading decisions.
 
-## **Available Feature Guide** ##
+## Available Feature Guide ##
 
 Features can be called by specifying config dictionaries. Create one dictionary per feature and return them in a dictionary as market features or instrument features.
 
