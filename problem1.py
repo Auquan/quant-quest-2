@@ -1,6 +1,7 @@
 from backtester.features.feature import Feature
 from backtester.trading_system import TradingSystem
 from backtester.sample_scripts.fair_value_params import FairValueTradingParams
+from backtester.version import updateCheck
 
 
 class Problem1Solver():
@@ -131,6 +132,8 @@ class MyCustomFeature(Feature):
 
 
 if __name__ == "__main__":
+    if not updateCheck():
+        print 'please update'
     problem1Solver = Problem1Solver()
     tsParams = FairValueTradingParams(problem1Solver)
     tradingSystem = TradingSystem(tsParams)
