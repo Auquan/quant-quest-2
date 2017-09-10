@@ -20,7 +20,7 @@ class Problem1Solver():
     '''
 
     def getSymbolsToTrade(self):
-        return []
+        return ['AGW']
 
     '''
     [Optional] This is a way to use any custom features you might have made.
@@ -55,7 +55,6 @@ class Problem1Solver():
                          'featureId': 'my_custom_feature',
                           'params': {'param1': 'value1'}}
     return [ma1Dict, sdevDict, customFeatureDict]
-
     For  instrument, you will have features keyed by ma_5, sdev_5, custom_inst_feature
     '''
 
@@ -63,11 +62,11 @@ class Problem1Solver():
         ma1Dict = {'featureKey': 'ma_5',
                    'featureId': 'moving_average',
                    'params': {'period': 5,
-                              'featureName': 'stockVWAP'}}
+                              'featureName': 'basis'}}
         sdevDict = {'featureKey': 'sdev_5',
                     'featureId': 'moving_sdev',
                     'params': {'period': 5,
-                               'featureName': 'stockVWAP'}}
+                               'featureName': 'basis'}}
         customFeatureDict = {'featureKey': 'custom_inst_feature',
                              'featureId': 'my_custom_feature',
                              'params': {'param1': 'value1'}}
@@ -88,8 +87,9 @@ class Problem1Solver():
         # The second to last row (if exists) would have the features for the previous
         # time update. Columns will be featureKeys for different features
         lookbackInstrumentFeatures = instrument.getDataDf()
+        basisFairValue = lookbackInstrumentFeatures.iloc[-1]['ma_5']
 
-        return lookbackInstrumentFeatures.iloc[-1]['ma_5']
+        return basisFairValue
 
 
 '''
@@ -103,7 +103,6 @@ class MyCustomFeature(Feature):
     1. Define it in getCustomFeatures, where you specify the identifier with which you want to access this feature.
     2. To finally use it in a meaningful way, specify this feature in getFeatureConfigDicts with appropirate feature params.
     Example for this is provided below.
-
     Params:
     featureParams: A dictionary of parameter and parameter values your features computation might depend on.
                    You define the structure for this. just have to make sure these parameters are provided when
@@ -133,8 +132,11 @@ class MyCustomFeature(Feature):
 
 if __name__ == "__main__":
     if not updateCheck():
-        print 'please update'
+        print 'Your version of the auquan toolbox package is old. Please update by running the following command:'
+        print 'pip install -U auquan_toolbox'
     problem1Solver = Problem1Solver()
     tsParams = FairValueTradingParams(problem1Solver)
     tradingSystem = TradingSystem(tsParams)
+    # Set onlyAnalyze to True to quickly generate csv files with all the features
+    # Set onlyAnalyze to False to run a full backtest
     tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=False)
