@@ -18,6 +18,8 @@ The easiest way and the most recommended way is via pip. Just run the following 
 `pip install -U auquan_toolbox`
 If we publish any updates to the toolbox, the same command `pip install -U auquan_toolbox` will also automatically get the new version of the toolbox. 
 
+**Note**: Mac users, if you face any issues with installation, try using 'pip install --user auquan_toolbox' 
+
 ### Download [Problem1.py](https://github.com/Auquan/quant-quest-2/blob/master/problem1.py) 
 Run the following command to make sure everything is setup properly
 
@@ -28,30 +30,71 @@ Use *problem1.py* as a template which contains skeleton functions (with explanat
 
 ## How does the toolbox work? ##
 
-The data for the competition is provided [here](https://github.com/Auquan/auquan-historical-data/tree/master/qq2Data). The toolbox autodownloads and loads the data for you. You then need to create features and combine them in the prediction function to generate your predictions. 
+The data for the competition is provided [here](https://github.com/Auquan/auquan-historical-data/tree/master/qq2Data). The toolbox auto-downloads and loads the data for you. You then need to create features and combine them in the prediction function to generate your predictions. 
 
 Features and predictions are explained below. The toolbox also provides extensive functionality and customization. While not required for the competition,you can read more about the toolbox [here](https://bitbucket.org/auquan/auquantoolbox/wiki/Home)
 
 ### Creating Features ##
-Features can be called by specifying config dictionaries. Create one dictionary per feature and return them in a dictionary as market features or instrument features.
-Instrument features are calculated per instrument (for example position, fees, moving average of instrument price) and market features are calculated for whole trading system (for example portfolio value, total pnl)
+Fill in the features you want to use in *`getFeatureConfigDicts()`* function. Features are called by specifying config dictionaries. Create one dictionary per feature and return them in a dictionary.
 
-Feature config Dictionary has the following keys:
+**Feature config Dictionary has the following keys:**
   > *featureId:* a string representing the type of feature you want to use  
   > *featureKey:* {optional} a string representing the key you will use to access the value of this feature  
   >            If not present, will just use featureId  
   > *params:* {optional} A dictionary with which contains other optional params if needed by the feature  
-        
-Full list of features is available [here](https://bitbucket.org/auquan/auquantoolbox/src/master/backtester/features/README.md).
+  
+  **Example**: If you only want to use the moving_sum feature, your *`getFeatureConfigDicts()`* function should be:
+  ```python
+  def getFeatureConfigDicts(self):
+        msDict = {'featureKey': 'ms_5',
+                'featureId': 'moving_sum',
+                'params': {'period': 5,
+                'featureName': 'basis'}}
+        return [msDict]
+```
+You can now use this feature by calling it's featureKey, 'ms_5'        
+Full list of features with featureId and params is available [here](https://bitbucket.org/auquan/auquantoolbox/src/master/backtester/features/README.md).
 
-To use your own custom features(you need to create them separately using this [template](https://bitbucket.org/auquan/auquantoolbox/src/master/my_custom_feature.py), return a dictionary where
-  > *key:* featureId to access this feature (Make sure this doesnt conflict with any of the pre defined feature Ids)  
-  > *value:* Your custom Class which computes this feature. The class should be an instance of Feature  
-  > Eg. if your custom class is MyCustomFeature, and you want to access this via featureId='my_custom_feature',  
-  > you will import that class, and return this function as {'my_custom_feature': MyCustomFeature}  
+To use your own custom features, follow the example of class `MyCustomFeature()` in problem1.py. Specifically, you'll have to:
+1. create a new class for the feature and implement your logic in the function `computeForInstrument()` - you can copy the class from `MyCustomFeature()`
+Example:
+```python
+class MyCustomFeatureClassName(Feature):
+    @classmethod
+    def computeForInstrument(cls, featureParams, featureKey, currentFeatures, instrument, instrumentManager):
+        return 5
+```        
+2. modify function `getCustomFeatures()` to return a dictionary with Id for this class (follow formats like `{'my_custom_feature_identifier': MyCustomFeatureClassName}`. Make sure 'my_custom_feature_identifier' doesnt conflict with any of the pre defined feature Ids
+```python
+def getCustomFeatures(self):
+        return {'my_custom_feature_identifier': MyCustomFeatureClassName}
+```
+        
+3. create a dict for this feature in `getFeatureConfigDicts()`. Dict format is:
+```python
+  customFeatureDict = {'featureKey': 'my_custom_feature_key',
+                         'featureId': 'my_custom_feature_identifier',
+                          'params': {'param1': 'value1'}}
+```
+You can now use this feature by calling it's featureKey, 'my_custom_feature_key'
+
+Instrument features are calculated per instrument (for example position, fees, moving average of instrument price). The toolbox auto-loops through all intruments to calculate features for you.
 
 ### Prediction Function ###
-Combine all the features to create the desired prediction function. For problem 1, your prediction function should output the predicted FairValue(expected average of future values) over the next 5 minutes. Output of the prediction function is used by the toolbox to make further trading decisions.
+Combine all the features to create the desired prediction function. For problem 1, fill the funtion `getFairValue()` to return the predicted FairValue(expected average of future values). 
+Here you can call your previously created features by referencing their featureId. For example, I can call my moving sum and custom feature as:
+```python
+def getFairValue(self, time, instrument, instrumentManager):
+        lookbackInstrumentFeatures = instrument.getDataDf()
+        # dataframe for historical instrument features. The last row of this data frame
+        # would contain the features which are being calculated in this update cycle or for this time.
+        # The second to last row (if exists) would have the features for the previous
+        # time update. Columns will be featureKeys for different features
+        basisFairValue = lookbackInstrumentFeatures.iloc[-1]['ms_5']/lookbackInstrumentFeatures.iloc[-1]['my_custom_feature_key']
+        return basisFairValue
+```
+
+Output of the prediction function is used by the toolbox to make further trading decisions and evaluate your score.
 
 ## Available Feature Guide ##
 
