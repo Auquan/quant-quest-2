@@ -53,8 +53,9 @@ Fill in the features you want to use in *`getFeatureConfigDicts()`* function. Fe
         return [msDict]
 ```
 You can now use this feature by calling it's featureKey, 'ms_5'        
-Full list of features with featureId and params is available [here](https://bitbucket.org/auquan/auquantoolbox/src/master/backtester/features/README.md).
+Full list of features with featureId and params is available [here](https://github.com/Auquan/quant-quest-2/blob/master/README.md#available-feature-guide).
 
+***Custom Features***
 To use your own custom features, follow the example of class `MyCustomFeature()` in problem1.py. Specifically, you'll have to:
 1. create a new class for the feature and implement your logic in the function `computeForInstrument()` - you can copy the class from `MyCustomFeature()`
 Example:
