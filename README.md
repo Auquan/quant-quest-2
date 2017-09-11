@@ -30,7 +30,19 @@ Use *problem1.py* as a template which contains skeleton functions (with explanat
 
 ## How does the toolbox work? ##
 
-The data for the competition is provided [here](https://github.com/Auquan/auquan-historical-data/tree/master/qq2Data). The toolbox auto-downloads and loads the data for you. You then need to create features and combine them in the prediction function to generate your predictions. 
+### Getting Data ###
+The data for the competition is provided [here](https://github.com/Auquan/auquan-historical-data/tree/master/qq2Data). The toolbox auto-downloads and loads the data for you. You can specify the training dataset you want to load in `getTrainingDataSet()` function.
+```python
+def getTrainingDataSet(self):
+        return "sampleData"
+```
+
+You can specify the instruments to load in function `getSymbolsToTrade()`. If you return an empty array, it downloads all the stocks.
+```python
+    def getSymbolsToTrade(self):
+        return []
+ ```
+ You then need to create features and combine them in the prediction function to generate your predictions. 
 
 Features and predictions are explained below. The toolbox also provides extensive functionality and customization. While not required for the competition,you can read more about the toolbox [here](https://bitbucket.org/auquan/auquantoolbox/wiki/Home)
 
