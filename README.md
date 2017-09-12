@@ -1,4 +1,4 @@
-# Official Page for  [Quant Quest Competition](http://quant-quest.auquan.com) hosted by Auquan.
+# Official Page for  [Quant Quest](http://quant-quest.auquan.com) hosted by Auquan.
 
 ## Trading Problem Overview ##
 This problem requires a mix of statistics and data analysis skills to create a predictive model using financial data. We will provide you with a toolbox and historical data to develop and test your strategy for the competition.
@@ -136,7 +136,7 @@ Feature ID  | Parameters | Description
 *rank* | 'featureName', 'period' | Ranks last *period* values of *featureName* on a scale of 0 to 1  
 *scale* | 'featureName', 'period', 'scale' | Resale last *period* values of *featureName* on a scale of 0 to *scale*
 *ratio*  | 'featureName', 'instrumentId1', 'instrumentId2' | ratio of feature values of instrumentID1 / instrumentID2
-*momentum*  | 'featureName', 'period' | calculate momentum in *featureName* over *period* as featureValue(now) -  featureValue(now - period)
+*momentum*  | 'featureName', 'period' | calculate momentum in *featureName* over *period* as (featureValue(now) -  featureValue(now - period))/featureValue * 100
 *bollinger_bands*  | 'featureName', 'period' | upper and lower bollinger bands as average(period) - sdev(period), average(period) + sdev(period)
 *cross_sectional_momentum* | 'featureName', 'period', 'instrumentIds' | Returns Cross-Section Momentum of 'instrumentIds' in *featureName* over *period* 
 *macd*  | 'featureName', 'period1', 'period2' | moving average convergence divergence as average(period1) - average(period2)
