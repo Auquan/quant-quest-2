@@ -35,6 +35,7 @@ The data for the competition is provided [here](https://github.com/Auquan/auquan
 ```python
 def getTrainingDataSet(self):
         return "sampleData"
+        # Set this to trainingData1 or trainingData2 or trainingData3
 ```
 
 You can specify the instruments to load in function `getSymbolsToTrade()`. If you return an empty array, it downloads all the stocks.
