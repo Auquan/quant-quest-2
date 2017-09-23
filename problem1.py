@@ -8,7 +8,7 @@ class Problem1Solver():
 
     '''
     Specifies which training data set to use. Right now support
-    sampleData, trainingData1, trainingData2, trainingData3.
+    trainingData1, trainingData2, trainingData3.
     '''
 
     def getTrainingDataSet(self):
