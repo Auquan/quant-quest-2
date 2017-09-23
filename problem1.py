@@ -163,5 +163,5 @@ if __name__ == "__main__":
         tradingSystem = TradingSystem(tsParams)
         # Set onlyAnalyze to True to quickly generate csv files with all the features
         # Set onlyAnalyze to False to run a full backtest
-        # Set makeInstrumentCsvs to False to not make instrument specific csvs in runLogs. This improves the performance BY A LOT
-        tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=False, makeInstrumentCsvs=True)
+        # Set makeInstrumentCsvs to True to make instrument specific csvs in runLogs. This degrades the performance of the backtesting system
+        tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=False, makeInstrumentCsvs=False)
