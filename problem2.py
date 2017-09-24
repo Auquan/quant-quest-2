@@ -8,15 +8,54 @@ import scipy.stats as st
 
 class Problem2Solver():
 
+    '''
+    Specifies which training data set to use. Right now support
+    trainginDataP2_1, trainginDataP2_2.
+    '''
     def getTrainingDataSet(self):
         return "trainingDataP2_1"
 
+    '''
+    Returns the stocks to trade.
+    If empty, uses all the stocks.
+    '''
     def getSymbolsToTrade(self):
         return ['AGW']
 
+    '''
+    [Optional] This is a way to use any custom features you might have made.
+    Returns a dictionary where
+    key: featureId to access this feature (Make sure this doesnt conflict with any of the pre defined feature Ids)
+    value: Your custom Class which computes this feature. The class should be an instance of Feature
+    Eg. if your custom class is MyCustomFeature, and you want to access this via featureId='my_custom_feature',
+    you will import that class, and return this function as {'my_custom_feature': MyCustomFeature}
+    '''
     def getCustomFeatures(self):
         return {'my_custom_feature': MyCustomFeature}
 
+    '''
+    Returns a dictionary with:
+    value: Array of instrument feature config dictionaries
+        feature config Dictionary has the following keys:
+        featureId: a string representing the type of feature you want to use
+        featureKey: {optional} a string representing the key you will use to access the value of this feature.
+                    If not present, will just use featureId
+        params: {optional} A dictionary with which contains other optional params if needed by the feature
+    Example:
+    ma1Dict = {'featureKey': 'ma_5',
+               'featureId': 'moving_average',
+               'params': {'period': 5,
+                          'featureName': 'stockVWAP'}}
+    sdevDict = {'featureKey': 'sdev_5',
+                'featureId': 'moving_sdev',
+                'params': {'period': 5,
+                           'featureName': 'stockVWAP'}}
+    customFeatureDict = {'featureKey': 'custom_inst_feature',
+                         'featureId': 'my_custom_feature',
+                          'params': {'param1': 'value1'}}
+    return [ma1Dict, sdevDict, customFeatureDict]
+    For  instrument, you will have features keyed by ma_5, sdev_5, custom_inst_feature
+    '''
     def getFeatureConfigDicts(self):
         ma1Dict = {'featureKey': 'ma_30',
                    'featureId': 'moving_average',
@@ -34,6 +73,17 @@ class Problem2Solver():
                              'featureId': 'my_custom_feature',
                              'params': {'param1': 'value1'}}
         return [ma1Dict, ma2Dict, sdevDict, customFeatureDict]
+
+    '''
+    Using all the features you have calculated in getFeatureConfigDicts, combine them in a meaningful way
+    to compute the probability as specified in the question.
+    Params:
+    time: time at which this is being calculated
+    instrumentManager: Holder for all the instruments
+    Returns:
+    A Pandas DataSeries with instrumentIds as the index, and the corresponding data your estimation of the fair value
+    for that stock/instrumentId
+    '''
 
     def getClassifierProbability(self, updateNum, time, instrumentManager):
         # holder for all the instrument features
@@ -105,7 +155,7 @@ if __name__ == "__main__":
         problem2Solver = Problem2Solver()
         tsParams = FeaturePredictionTradingParams(problem2Solver)
         tradingSystem = TradingSystem(tsParams)
-        # Set onlyAnalyze to True to quickly generate csv files with all the features
+        # Set shouldPlot to True to quickly generate csv files with all the features
         # Set onlyAnalyze to False to run a full backtest
         # Set makeInstrumentCsvs to True to make instrument specific csvs in runLogs. This degrades the performance of the backtesting system
-        tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=False, makeInstrumentCsvs=False)
+        tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=True, makeInstrumentCsvs=False)
