@@ -1,5 +1,8 @@
 # Official Page for  [Quant Quest](http://quant-quest.auquan.com) hosted by Auquan.
 
+## IMPORTANT##
+We've made changes to the prediction function. Please [read the new documentation](https://github.com/Auquan/quant-quest-2#prediction-function)
+
 ## Trading Problem Overview ##
 This problem requires a mix of statistics and data analysis skills to create a predictive model using financial data. We will provide you with a toolbox and historical data to develop and test your strategy for the competition.
 
@@ -26,7 +29,8 @@ Run the following command to make sure everything is setup properly
         python problem1.py
 
 ### Make your changes
-Use *problem1.py* as a template which contains skeleton functions (with explanation) that need to be filled in to create your own trading strategy. You need to fill in the getFairValue function for problem 1. 
+Use *problem1.py* as a template which contains skeleton functions (with explanation) that need to be filled in to create your own trading strategy. You need to fill in the `getFairValue()` function for problem 1. 
+For problem 2, fill in the `getClassifierProbability()` function for problem 2.
 
 ## How does the toolbox work? ##
 
@@ -117,8 +121,7 @@ Here you can call your previously created features by referencing their featureI
         return ms5
  ```
  
- **Important: Previously, we were calling `lookbackInstrumentFeatures = instrument.getDataDf()`, which returned the holder for all instrument feature and then ` lookbackInstrumentFeatures['ms_5']` which returns a dataFrame for that feature for one stock. 
- Now we first call the holder for all the instrument features as `lookbackInstrumentFeatures = instrumentManager.getLookbackInstrumentFeatures()` and then dataframe for the feature as  `lookbackInstrumentFeatures.getFeatureDf('ms_5')` which returns a dataFrame for that feature for ALL stocks at the same time. Rest of the code is same.**
+ **Important:** Previously, we were calling `lookbackInstrumentFeatures = instrument.getDataDf()`, which returned the holder for all instrument feature and then ` lookbackInstrumentFeatures['ms_5']` which returns a dataFrame for that feature for one stock. **Now we first call the holder for all the instrument features** as `lookbackInstrumentFeatures = instrumentManager.getLookbackInstrumentFeatures()` and then dataframe for the feature as  `lookbackInstrumentFeatures.getFeatureDf('ms_5')` which returns a dataFrame for that feature for **ALL stocks** at the same time. Rest of the code is same.**
 
 
 Output of the prediction function is used by the toolbox to make further trading decisions and evaluate your score.
