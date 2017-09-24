@@ -1,5 +1,8 @@
 # Official Page for  [Quant Quest](http://quant-quest.auquan.com) hosted by Auquan.
 
+## IMPORTANT##
+We've made changes to the prediction function. Please [read the new documentation](https://github.com/Auquan/quant-quest-2#prediction-function)
+
 ## Trading Problem Overview ##
 This problem requires a mix of statistics and data analysis skills to create a predictive model using financial data. We will provide you with a toolbox and historical data to develop and test your strategy for the competition.
 
@@ -26,7 +29,8 @@ Run the following command to make sure everything is setup properly
         python problem1.py
 
 ### Make your changes
-Use *problem1.py* as a template which contains skeleton functions (with explanation) that need to be filled in to create your own trading strategy. You need to fill in the getFairValue function for problem 1. 
+Use *problem1.py* as a template which contains skeleton functions (with explanation) that need to be filled in to create your own trading strategy. You need to fill in the `getFairValue()` function for problem 1. 
+For problem 2, fill in the `getClassifierProbability()` function for problem 2.
 
 ## How does the toolbox work? ##
 
@@ -94,19 +98,31 @@ You can now use this feature by calling it's featureKey, 'my_custom_feature_key'
 
 Instrument features are calculated per instrument (for example position, fees, moving average of instrument price). The toolbox auto-loops through all intruments to calculate features for you.
 
+## IMPORTANT: We've made changes to this function, please make sure to change your file accordingly ##
 ### Prediction Function ###
+
 Combine all the features to create the desired prediction function. For problem 1, fill the funtion `getFairValue()` to return the predicted FairValue(expected average of future values). 
 Here you can call your previously created features by referencing their featureId. For example, I can call my moving sum and custom feature as:
 ```python
-def getFairValue(self, time, instrument, instrumentManager):
-        lookbackInstrumentFeatures = instrument.getDataDf()
-        # dataframe for historical instrument features. The last row of this data frame
-        # would contain the features which are being calculated in this update cycle or for this time.
-        # The second to last row (if exists) would have the features for the previous
-        # time update. Columns will be featureKeys for different features
-        basisFairValue = lookbackInstrumentFeatures.iloc[-1]['ms_5']/lookbackInstrumentFeatures.iloc[-1]['my_custom_feature_key']
-        return basisFairValue
-```
+    def getFairValue(self, updateNum, time, instrumentManager):
+        # holder for all the instrument features
+        lookbackInstrumentFeatures = instrumentManager.getLookbackInstrumentFeatures()
+
+        # dataframe for a historical instrument feature (ms_5 in this case). The index is the timestamps
+        # atmost upto lookback data points. The columns of this dataframe are the stock symbols/instrumentIds.
+        ms5Data = lookbackInstrumentFeatures.getFeatureDf('ms_5')
+        
+        
+
+        # Returns a series with index as all the instrumentIds. This returns the value of the feature at the last
+        # time update.
+        ms5 = ms5Data.iloc[-1]
+
+        return ms5
+ ```
+ 
+ **Important:** Previously, we were calling `lookbackInstrumentFeatures = instrument.getDataDf()`, which returned the holder for all instrument feature and then ` lookbackInstrumentFeatures['ms_5']` which returns a dataFrame for that feature for one stock. **Now we first call the holder for all the instrument features** as `lookbackInstrumentFeatures = instrumentManager.getLookbackInstrumentFeatures()` and then dataframe for the feature as  `lookbackInstrumentFeatures.getFeatureDf('ms_5')` which returns a dataFrame for that feature for **ALL stocks** at the same time. Rest of the code is same.**
+
 
 Output of the prediction function is used by the toolbox to make further trading decisions and evaluate your score.
 
