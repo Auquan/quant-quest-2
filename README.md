@@ -154,7 +154,9 @@ Feature ID  | Parameters | Description
 *scale* | 'featureName', 'period', 'scale' | Resale last *period* values of *featureName* on a scale of 0 to *scale*
 *ratio*  | 'featureName', 'instrumentId1', 'instrumentId2' | ratio of feature values of instrumentID1 / instrumentID2
 *momentum*  | 'featureName', 'period' | calculate momentum in *featureName* over *period* as (featureValue(now) -  featureValue(now - period))/featureValue * 100
-*bollinger_bands*  | 'featureName', 'period' | upper and lower bollinger bands as average(period) - sdev(period), average(period) + sdev(period)
+*bollinger_bands*  | 'featureName', 'period' | DEPRECATED, use *bollinger_bands_lower*, *bollinger_bands_upper* as below
+*bollinger_bands_lower*  | 'featureName', 'period' | lower bollinger bands as average(period) - sdev(period)
+*bollinger_bands_upper*  | 'featureName', 'period' | upper bollinger bands as average(period) + sdev(period)
 *cross_sectional_momentum* | 'featureName', 'period', 'instrumentIds' | Returns Cross-Section Momentum of 'instrumentIds' in *featureName* over *period* 
 *macd*  | 'featureName', 'period1', 'period2' | moving average convergence divergence as average(period1) - average(period2)
 *rsi*  | 'featureName', 'period' | Relative Strength Index - ratio of average profits / average losses over period
