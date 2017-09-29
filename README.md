@@ -136,6 +136,7 @@ Feature config Dictionary has the following keys:
   >            If not present, will just use featureId  
   > *params:* {optional} A dictionary with which contains other optional params if needed by the feature 
 
+Code Snippets for all the features are available [here](https://bitbucket.org/auquan/auquantoolbox/wiki/Home#markdown-header-examples)
 
 Feature ID  | Parameters | Description
 :-------------: | ------------- | -------------  
