@@ -10,7 +10,7 @@ class Problem2Solver():
 
     '''
     Specifies which training data set to use. Right now support
-    trainginDataP2_1, trainginDataP2_2.
+    trainingDataP2_1, trainingDataP2_2.
     '''
     def getTrainingDataSet(self):
         return "trainingDataP2_1"
