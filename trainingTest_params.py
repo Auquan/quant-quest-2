@@ -9,8 +9,8 @@ from backtester.version import updateCheck
 from backtester.constants import *
 import pandas as pd
 
-start = '2008/01/01'
-end = '2017/06/30'
+start = '2011/07/01'
+end = '2016/06/30'
 instrumentIds = ['AAPL', 'MSFT', 'GOOG', 'JNJ', 'JPM', 'BAC', 'C', 'KO', 'PEP', 'DIS',
                  'GE', 'WMT', 'MCD', 'BA', 'HD', 'XOM', 'CVX', 'VZ', 'T', 'CMCSA',
                  'AMGN', 'CAT', 'SLB', 'LMT', 'FDX', 'BLK', 'MS', 'CL', 'BIIB','WBA']
