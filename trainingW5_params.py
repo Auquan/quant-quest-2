@@ -187,7 +187,7 @@ class MyTradingParams(TradingSystemParameters):
     def __init__(self, tradingFunctions):
         self.__tradingFunctions = tradingFunctions
         super(MyTradingParams, self).__init__()
-        self.__dataSetId = 'trainingData1'#'trainingW5_trainingData'
+        self.__dataSetId = 'trainingW5_trainingData'
         self.__instrumentIds = self.__tradingFunctions.getSymbolsToTrade()
 
 
@@ -242,7 +242,7 @@ class MyTradingParams(TradingSystemParameters):
     def getCustomFeatures(self):
         return {'my_custom_feature': MyCustomFeature,
                 'prediction': TrainingPredictionFeature,
-                'zero_fees': TotalFeesCalculator,
+                'zero_fees': FeesCalculator,
                 'benchmark_PnL': BuyHoldPnL}
 
 
@@ -366,7 +366,7 @@ class BuyHoldPnL(Feature):
 
         priceData = instrumentLookbackData.getFeatureDf('stockVWAP')
         bhpnl = pd.Series(0,index = instrumentManager.getAllInstrumentsByInstrumentId())
-        if len(priceData>1):
+        if len(priceData)>1:
             bhpnl += priceData[-1] - priceData[-2]
 
         return bhpnl
@@ -376,10 +376,11 @@ if __name__ == "__main__":
     if updateCheck():
         print('Your version of the auquan toolbox package is old. Please update by running the following command:')
         print('pip install -U auquan_toolbox')
-    tf = MyTradingFunctions()
-    tsParams = MyTradingParams(tf)
-    tradingSystem = TradingSystem(tsParams)
+    else:
+        tf = MyTradingFunctions()
+        tsParams = MyTradingParams(tf)
+        tradingSystem = TradingSystem(tsParams)
     # Set onlyAnalyze to True to quickly generate csv files with all the features
     # Set onlyAnalyze to False to run a full backtest
     # Set makeInstrumentCsvs to False to not make instrument specific csvs in runLogs. This improves the performance BY A LOT
-    tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=True, makeInstrumentCsvs=True)
+        tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=True, makeInstrumentCsvs=True)
