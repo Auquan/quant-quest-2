@@ -2,7 +2,7 @@ from backtester.trading_system_parameters import TradingSystemParameters
 from backtester.features.feature import Feature
 from datetime import timedelta
 from backtester.dataSource.quant_quest_data_source import QuantQuestDataSource
-from backtester.timeRule.quant_quest_time_rule import QuantQuestTimeRule
+# from backtester.timeRule.quant_quest_time_rule import QuantQuestTimeRule
 from backtester.executionSystem.simple_execution_system import SimpleExecutionSystem
 from backtester.orderPlacer.backtesting_order_placer import BacktestingOrderPlacer
 from backtester.trading_system import TradingSystem
@@ -29,10 +29,11 @@ class MyTradingFunctions():
     '''
     Specify the stock names that you want to trade.
     Make sure that there are atleast 10 stocks or your submission will not be evaluated by the submission portal.
+    You can leave this empty for all stocks
     '''
 
     def getSymbolsToTrade(self):
-        return ['AGW', 'CHV']
+        return []
     '''
     Specify all Features you want to use by  by creating config dictionaries.
     Create one dictionary per feature and return them in an array.
@@ -243,7 +244,8 @@ class MyTradingParams(TradingSystemParameters):
         return {'my_custom_feature': MyCustomFeature,
                 'prediction': TrainingPredictionFeature,
                 'zero_fees': FeesCalculator,
-                'benchmark_PnL': BuyHoldPnL}
+                'benchmark_PnL': BuyHoldPnL,
+                'ratio_score':Ratio}
 
 
     def getInstrumentFeatureConfigDicts(self):
@@ -268,9 +270,9 @@ class MyTradingParams(TradingSystemParameters):
                      'featureId': 'benchmark_PnL',
                      'params': {'pnlKey': 'pnl'}}
         scoreDict = {'featureKey': 'score',
-                     'featureId': 'ratio',
-                     'params': {'featureName1': 'pnl',
-                                'featureName2':'benchmark'}}
+                     'featureId': 'ratio_score',
+                     'params': {'feature1': 'pnl',
+                                'feature2':'benchmark'}}
 
         stockFeatureConfigs = self.__tradingFunctions.getInstrumentFeatureConfigDicts()
 
@@ -311,8 +313,8 @@ class MyTradingParams(TradingSystemParameters):
     def getExecutionSystem(self):
         return SimpleExecutionSystem(enter_threshold=0.7,
                                  exit_threshold=0.55,
-                                 longLimit=1,
-                                 shortLimit=1,
+                                 longLimit=0,
+                                 shortLimit=0,
                                  capitalUsageLimit=0.10 * self.getStartingCapital(),
                                  lotSize=1)
 
@@ -344,6 +346,9 @@ class MyTradingParams(TradingSystemParameters):
     def setDataSetId(self, dataSetId):
         self.__dataSetId = dataSetId
 
+    def getInstrumentsIds(self):
+        return self.__instrumentIds
+
 
 class TrainingPredictionFeature(Feature):
 
@@ -367,9 +372,23 @@ class BuyHoldPnL(Feature):
         priceData = instrumentLookbackData.getFeatureDf('stockVWAP')
         bhpnl = pd.Series(0,index = instrumentManager.getAllInstrumentsByInstrumentId())
         if len(priceData)>1:
-            bhpnl += priceData[-1] - priceData[-2]
+            bhpnl = instrumentLookbackData.getFeatureDf(featureKey).iloc[-1]
+            bhpnl += priceData.iloc[-1] - priceData.iloc[-2]
 
         return bhpnl
+
+class Ratio(Feature):
+    @classmethod
+    def computeForInstrument(cls, updateNum, time, featureParams, featureKey, instrumentManager):
+        instrumentLookbackData = instrumentManager.getLookbackInstrumentFeatures()
+
+        feature1Data = instrumentLookbackData.getFeatureDf(featureParams['feature1'])
+        feature2Data = instrumentLookbackData.getFeatureDf(featureParams['feature2'])
+        ratio = pd.Series(0,index = instrumentManager.getAllInstrumentsByInstrumentId())
+        if (len(feature1Data)>1) and (len(feature2Data)>1):
+            ratio = feature1Data.iloc[-1]/feature2Data.iloc[-1]
+
+        return ratio
 
 
 if __name__ == "__main__":
