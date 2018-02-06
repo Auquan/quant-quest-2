@@ -269,7 +269,8 @@ class MyTradingParams(TradingSystemParameters):
                      'params': {'pnlKey': 'pnl'}}
         scoreDict = {'featureKey': 'score',
                      'featureId': 'ratio',
-                     'params': {'pnlKey': 'pnl'}}
+                     'params': {'featureName1': 'pnl',
+                                'featureName2':'benchmark'}}
 
         stockFeatureConfigs = self.__tradingFunctions.getInstrumentFeatureConfigDicts()
 
