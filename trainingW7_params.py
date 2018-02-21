@@ -9,6 +9,7 @@ from backtester.trading_system import TradingSystem
 from backtester.version import updateCheck
 from backtester.constants import *
 import pandas as pd
+import numpy as np
 
 
 ## Make your changes to the functions below.
@@ -254,7 +255,7 @@ class MyTradingParams(TradingSystemParameters):
                                 'params': {}}
         feesConfigDict = {'featureKey': 'fees',
                           'featureId': 'fees_and_spread',
-                          'params': {}}
+                          'params': self.setFees()}
         profitlossConfigDict = {'featureKey': 'pnl',
                                 'featureId': 'pnl',
                                 'params': {'price': self.getPriceFeatureKey(),
@@ -267,16 +268,13 @@ class MyTradingParams(TradingSystemParameters):
         benchmarkDict = {'featureKey': 'benchmark',
                      'featureId': 'benchmark_PnL',
                      'params': {'pnlKey': 'pnl'}}
-        scoreDict = {'featureKey': 'score',
-                     'featureId': 'ratio',
-                     'params': {'featureName1': 'pnl',
-                                'featureName2':'benchmark'}}
+
 
         stockFeatureConfigs = self.__tradingFunctions.getInstrumentFeatureConfigDicts()
 
 
         return {INSTRUMENT_TYPE_STOCK: stockFeatureConfigs + [predictionDict,
-         feesConfigDict,profitlossConfigDict,capitalConfigDict,benchmarkDict, scoreDict]}
+         feesConfigDict,profitlossConfigDict,capitalConfigDict,benchmarkDict]}
 
     '''
     Returns an array of market feature config dictionaries
@@ -291,7 +289,7 @@ class MyTradingParams(TradingSystemParameters):
         scoreDict = {'featureKey': 'score',
                      'featureId': 'score_ll',
                      'params': {'featureName': self.getPriceFeatureKey(),
-                                'instrument_score_feature': 'score'}}
+                                'instrument_score_feature': 'benchmark'}}
         return [scoreDict]
 
 
@@ -347,6 +345,9 @@ class MyTradingParams(TradingSystemParameters):
     def getInstrumentsIds(self):
         return self.__instrumentIds
 
+    def setFees(self):
+        return {'brokerage': 0.0001,'spread': 0.05}
+
 
 class TrainingPredictionFeature(Feature):
 
@@ -363,12 +364,23 @@ class FeesCalculator(Feature):
         instrumentLookbackData = instrumentManager.getLookbackInstrumentFeatures()
 
         priceData = instrumentLookbackData.getFeatureDf('stockVWAP')
-        fees = pd.Series(0.05,index = instrumentManager.getAllInstrumentsByInstrumentId())
+        positionData = instrumentLookbackData.getFeatureDf('position')
+        currentPosition = positionData.iloc[-1]
+        previousPosition = 0 if updateNum < 2 else positionData.iloc[-2]
+        changeInPosition = currentPosition - previousPosition
+        fees = pd.Series(np.abs(changeInPosition)*featureParams['brokerage'],index = instrumentManager.getAllInstrumentsByInstrumentId())
         if len(priceData)>1:
-            fees += 0.0001*priceData[-1]
+            currentPrice = priceData.iloc[-1]
+        else:
+            currentPrice = 0
+
+        fees = fees*currentPrice + np.abs(changeInPosition)*featureParams['spread']
+        print(changeInPosition)
+        print(currentPrice)
+        print(fees)
 
         return fees
-
+        
 
 
 class BuyHoldPnL(Feature):
@@ -379,7 +391,7 @@ class BuyHoldPnL(Feature):
         priceData = instrumentLookbackData.getFeatureDf('stockVWAP')
         bhpnl = pd.Series(0,index = instrumentManager.getAllInstrumentsByInstrumentId())
         if len(priceData)>1:
-            bhpnl += priceData[-1] - priceData[-2]
+            bhpnl += priceData.iloc[-1] - priceData.iloc[-2]
 
         return bhpnl
 
@@ -388,11 +400,11 @@ if __name__ == "__main__":
     if updateCheck():
         print('Your version of the auquan toolbox package is old. Please update by running the following command:')
         print('pip install -U auquan_toolbox')
-    else:
-        tf = MyTradingFunctions()
-        tsParams = MyTradingParams(tf)
-        tradingSystem = TradingSystem(tsParams)
-    # Set onlyAnalyze to True to quickly generate csv files with all the features
-    # Set onlyAnalyze to False to run a full backtest
-    # Set makeInstrumentCsvs to False to not make instrument specific csvs in runLogs. This improves the performance BY A LOT
-        tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=True, makeInstrumentCsvs=True)
+    # else:
+    tf = MyTradingFunctions()
+    tsParams = MyTradingParams(tf)
+    tradingSystem = TradingSystem(tsParams)
+# Set onlyAnalyze to True to quickly generate csv files with all the features
+# Set onlyAnalyze to False to run a full backtest
+# Set makeInstrumentCsvs to False to not make instrument specific csvs in runLogs. This improves the performance BY A LOT
+    tradingSystem.startTrading(onlyAnalyze=False, shouldPlot=True, makeInstrumentCsvs=True)
