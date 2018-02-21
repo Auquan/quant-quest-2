@@ -22,9 +22,8 @@ else:
 	
 try:
 	mktReturnsFileName = 'historicalData/%s/market_returns.csv'%datasetId
-	if not os.path.isfile(mktReturnsFileName):
-		url = 'https://raw.githubusercontent.com/Auquan/auquan-historical-data/master/qq2Data/%s/market_returns.csv' % (
-			dataSetId)
+	if not (os.path.isfile(mktReturnsFileName)):
+		url = 'https://raw.githubusercontent.com/Auquan/auquan-historical-data/master/qq2Data/%s/market_returns.csv' % (datasetId)
 		print(url)
 		response = urlopen(url)
 		status = response.getcode()
