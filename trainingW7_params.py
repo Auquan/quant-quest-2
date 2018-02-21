@@ -228,8 +228,9 @@ class MyTradingParams(TradingSystemParameters):
     def getFrequencyOfFeatureUpdates(self):
         return timedelta(0, 30)  # minutes, seconds
 
-    def getBenchmark(self):
-        return 'SPY'
+    def getStartingCapital(self):
+        print(750*len(self.__instrumentIds))
+        return 750*len(self.__instrumentIds)
 
     '''
     This is a way to use any custom features you might have made.
@@ -375,9 +376,6 @@ class FeesCalculator(Feature):
             currentPrice = 0
 
         fees = fees*currentPrice + np.abs(changeInPosition)*featureParams['spread']
-        print(changeInPosition)
-        print(currentPrice)
-        print(fees)
 
         return fees
         
