@@ -15,6 +15,7 @@ import numpy as np
 ## Make your changes to the functions below.
 ## You need to specify features you want to use in getInstrumentFeatureConfigDicts() and getMarketFeatureConfigDicts()
 ## and create your predictions using these features in getPrediction()
+## SPECIFY number of stocks in each basket below
 ## Don't change any other function
 ## The toolbox does the rest for you, from downloading and loading data to running backtest
 
@@ -30,13 +31,12 @@ class MyTradingFunctions():
         return []
 
 
+    ####################################
+    ## FILL THESE FOUR FUNCTIONS BELOW ##
+    ####################################
+
     def getSymbolsInBasket(self):
         return 8
-
-    ####################################
-    ## FILL THESE THREE FUNCTIONS BELOW ##
-    ####################################
-
     '''
     Specify all Features you want to use by  by creating config dictionaries.
     Create one dictionary per feature and return them in an array.
@@ -361,6 +361,9 @@ class MyTradingParams(TradingSystemParameters):
 
     def getInstrumentsIds(self):
         return self.__instrumentIds
+
+    def getSymbolsInBasket(self):
+        return self.__tradingFunctions.getSymbolsInBasket()
 
     def setFees(self):
         return {'brokerage': 0.0001,'spread': 0.05}
