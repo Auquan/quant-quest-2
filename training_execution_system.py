@@ -1,4 +1,5 @@
-from backtester.executionSystem.base_execution_system import BaseExecutionSystem, InstrumentExection
+from backtester.executionSystem.simple_execution_system_fairvalue import SimpleExecutionSystemWithFairValue
+from backtester.executionSystem.simple_execution_system import SimpleExecutionSystem
 from backtester.logger import *
 import numpy as np
 import pandas as pd
@@ -14,8 +15,9 @@ class TrainingExecutionSystem(SimpleExecutionSystem):
                                                     enterlotSize=enterlotSize, exitlotSize=exitlotSize, 
                                                     limitType=limitType, price=price)
 
+        self.params = {}
 
-''' If you want to use FairValue Based execution, use the below Class definition
+    ''' If you want to use FairValue Based execution, use the below Class definition
 class TrainingExecutionSystem(SimpleExecutionSystemWithFairValue):
     def __init__(self, enter_threshold=0.2, exit_threshold=0.05, longLimit=10,
                  shortLimit=10, capitalUsageLimit=0, enterlotSize=1, exitlotSize = 1, limitType='L', price=''):
@@ -28,9 +30,9 @@ class TrainingExecutionSystem(SimpleExecutionSystemWithFairValue):
 
         '''
 
-        self.params = {}
-
-    '''The following functions are implemented in base class. 
+#########################################################################################
+    ''' 
+        The following functions are implemented in base class. 
         The arguments they take are also mentioned.
         You can write your custom implementation here if you like.
 
