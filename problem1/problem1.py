@@ -1,6 +1,6 @@
 from backtester.features.feature import Feature
 from backtester.trading_system import TradingSystem
-from backtester.sample_scripts.fair_value_params import FairValueTradingParams
+from problem1_trading_params import Problem1TradingParams
 from backtester.version import updateCheck
 
 
@@ -13,7 +13,6 @@ class Problem1Solver():
 
     def getTrainingDataSet(self):
         return "trainingData1"
-
     '''
     Returns the stocks to trade.
     If empty, uses all the stocks.
@@ -159,7 +158,7 @@ if __name__ == "__main__":
         print('pip install -U auquan_toolbox')
     else:
         problem1Solver = Problem1Solver()
-        tsParams = FairValueTradingParams(problem1Solver)
+        tsParams = Problem1TradingParams(problem1Solver)
         tradingSystem = TradingSystem(tsParams)
         # Set shouldPlot to True to quickly generate csv files with all the features
         # Set onlyAnalyze to False to run a full backtest
