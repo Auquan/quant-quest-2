@@ -7,7 +7,32 @@ from backtester.constants import *
 from backtester.features.feature import Feature
 from backtester.logger import *
 import numpy as np
-from backtester.timeRule.quant_quest_time_rule import QuantQuestTimeRule
+import itertools as it
+from datetime import datetime, timedelta
+
+
+'''
+Time Rule for Problem 1
+Takes the datetime from github
+'''
+
+class Problem1TimeRule():
+    def __init__(self, allTimes):
+        self._allTimes=allTimes
+
+    def emitTimeToTrade(self):
+        allTimes=[]
+        for ele in self._allTimes:
+            allTimes.append(datetime.combine(ele.date(), datetime.min.time()))
+        allTimes=[i[0] for i in it.groupby(allTimes)]
+        for date in allTimes:
+            start = date + timedelta(minutes=17, hours=9)
+            end = date + timedelta(minutes=29, hours=15)
+            current = start
+            while (current <= end):
+                yield current
+                current += timedelta(minutes=1)
+
 
 
 class Problem1TradingParams(TradingSystemParameters):
@@ -33,16 +58,19 @@ class Problem1TradingParams(TradingSystemParameters):
 
     def getDataParser(self):
         instrumentIds = self.__problem1Solver.getSymbolsToTrade()
-        return CsvDataSource(cachedFolderName='historicalData/',
-                             dataSetId=self.__dataSetId,
-                             instrumentIds=instrumentIds,
-                             downloadUrl = 'https://raw.githubusercontent.com/Auquan/auquan-historical-data/master/qq2Data',
-                             timeKey = '',
-                             timeStringFormat = '%Y-%m-%d %H:%M:%S',
-                             startDateStr=None,
-                             endDateStr=None,
-                             liveUpdates=True,
-                             pad=True)
+        cds= CsvDataSource(cachedFolderName='historicalData/',
+                           dataSetId=self.__dataSetId,
+                           instrumentIds=instrumentIds,
+                           downloadUrl = 'https://raw.githubusercontent.com/Auquan/auquan-historical-data/master/qq2Data',
+                           timeKey = '',
+                           timeStringFormat = '%Y-%m-%d %H:%M:%S',
+                           startDateStr=None,
+                           endDateStr=None,
+                           liveUpdates=True,
+                           pad=True)
+        self._allTimes=cds._allTimes
+        return cds
+
 
     '''
     Returns an instance of class TimeRule, which describes the times at which
@@ -57,8 +85,7 @@ class Problem1TradingParams(TradingSystemParameters):
     a lot of time, you realistically wont be able to keep upto pace.
     '''
     def getTimeRuleForUpdates(self):
-        return QuantQuestTimeRule(cachedFolderName='historicalData/',
-                                  dataSetId=self.__dataSetId)
+        return Problem1TimeRule(self._allTimes)
 
     def getBenchmark(self):
         return None
@@ -221,7 +248,6 @@ class Problem1TradingParams(TradingSystemParameters):
 
     def setDataSetId(self, dataSetId):
         self.__dataSetId = dataSetId
-
 
 class Problem1PredictionFeature(Feature):
     problem1Solver = None
